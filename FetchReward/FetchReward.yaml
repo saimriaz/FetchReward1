@@ -1,32 +1,36 @@
 ﻿---
 AWSTemplateFormatVersion: "2010-09-09"
-
 Description: "AWS Sample Template that specifies a server with volumes and two users."
-  
-
 Metadata:
   Instances: 1
-    Description:"Amazon Linux 2 AMI (HVM), SSD Volume Type"
+  Description: "Amazon Linux 2 AMI (HVM), SSD Volume Type"
 Parameters:
   InstanceTypeParameter: 
-    Type: amzn2
+    Type: "AWS::EC2::Instance"
     Default: t2.micro
-
 Mappings: 
   RegionMap: 
     us-east-1: 
       "HVM64": "ami-0ff8a91507f77f867"
-
 Resources:
-   volumes:
-    - device: /dev/xvda
-      size_gb: 10
-      type: ext4
-      mount: /
-    - device: /dev/xvdf
-      size_gb: 100
-      type: xfs
-      mount: /data
-
-Outputs:
-  set of outputs
+    EC2Instance:
+        Type: "AWS::EC2::Instance"
+        Properties:
+            ami_type: amzn2
+            root_device_type: ebs
+            architecture: x86_64
+            -device: /dev/xvda
+            size_gb: 10
+            type: ext4
+            mount: /
+            -device: /dev/xvdf
+            size_gb: 100
+            type: xfs
+            mount: /data
+            UserData: 
+                users:
+                    -login: user1
+                    ssh_key: "user1@localhost"
+                    -login: user2
+                    ssh_key: "user2@localhost"
+            AvailabilityZone: "us-east-1a"
